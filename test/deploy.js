@@ -9,6 +9,7 @@ let stackingContract;
 let rewardTokenContract;
 let stk;
 let tkn0;
+let RewardDistributionContract;
 // let stkaddress;
   it("deploy Contract", async function () {
     
@@ -23,9 +24,14 @@ let tkn0;
     rewardTokenContract = await RewardToken.deploy();
     const rwrd = await rewardTokenContract.deployed();
     console.log("rewardToken address",rwrd.address);
+
+    // const RewardDistribution = await hre.ethers.getContractFactory("RewardDistribution");
+    // RewardDistributionContract = await RewardDistribution.deploy();
+    // const rwrdd = await RewardDistributionContract.deployed();
+    // console.log("rewardToken address",rwrdd.address);
     
     const StackingContract = await hre.ethers.getContractFactory("StakingRewards");
-    const stackingContract = await StackingContract.deploy("0x08a5c13f863a21579A5087697cA052B0bD63A555","0x08a5c13f863a21579A5087697cA052B0bD63A555",rewardTokenContract.address,token0Contract.address);
+    const stackingContract = await StackingContract.deploy(deployer.address,deployer.address,rewardTokenContract.address,token0Contract.address);
      stk = await stackingContract.deployed();
      const stkAddress= stk.address;
     console.log("Stacking contract address:", stk.address);
@@ -35,6 +41,7 @@ let tkn0;
     await token0Contract.approve(stackingContract.address,amount);
     await rewardTokenContract.approve(stackingContract.address,amount);
     await stackingContract.stake(100000);
+    await stackingContract.notifyRewardAmount(100000);
     await stackingContract.getReward();
     await stackingContract.withdraw(90000);
    

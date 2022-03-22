@@ -1,10 +1,11 @@
 # Deployed Contract Address
 
-Token0 address 0xe6Ae01E3bbd89a5a8cEf8c4BA4D4BFAB05051590
+Token0 address 0x9DceA1327513EAfEe0c64DCDA57851112CdCe65e
 
-rewardToken address 0xD9786d0DEDe2873e5975EDF8A67dC500601c3C4A
+rewardToken address 0x73a3D6498B66f0153100DFeC2df4d932229f02d8
 
-Stacking contract address: 0xf0d11137C03b3300Bbe3c5f10ac7fb786b8939E3
+Stacking contract address: 0xAe1def688eAAeE43835876ec6353594C7B7C5417
+
 
 # Basic Sample Hardhat Project
 
