@@ -6,4 +6,6 @@ contract RewardToken is ERC20 {
     constructor() ERC20("Reward Token for Stacking", "RTKN") {
         _mint(msg.sender, 1000000 * 10**18);
     }
+
+    
 }
