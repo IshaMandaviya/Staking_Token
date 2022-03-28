@@ -11,7 +11,7 @@ import "synthetix/contracts/SafeDecimalMath.sol";
 import "synthetix/contracts/interfaces/IERC20.sol";
 import "synthetix/contracts/interfaces/IFeePool.sol";
 import "synthetix/contracts/interfaces/IRewardsDistribution.sol";
-
+import "hardhat/console.sol";
 // https://docs.synthetix.io/contracts/source/contracts/rewardsdistribution
 contract RewardsDistribution is Owned {
     using SafeMath for uint;
@@ -146,15 +146,19 @@ contract RewardsDistribution is Owned {
     }
 
     function distributeRewards(uint amount) external returns (bool) {
+        
         require(amount > 0, "Nothing to distribute");
         require(msg.sender == authority, "Caller is not authorised");
         require(rewardEscrow != address(0), "RewardEscrow is not set");
         require(synthetixProxy != address(0), "SynthetixProxy is not set");
         require(feePoolProxy != address(0), "FeePoolProxy is not set");
+       
         require(
             IERC20(synthetixProxy).balanceOf(address(this)) >= amount,
             "RewardsDistribution contract does not have enough tokens to distribute"
         );
+        
+        // console.log(IERC20(synthetixProxy).balanceOf(address(this)));
 
         uint remainder = amount;
 
@@ -162,10 +166,10 @@ contract RewardsDistribution is Owned {
         for (uint i = 0; i < distributions.length; i++) {
             if (distributions[i].destination != address(0) || distributions[i].amount != 0) {
                 remainder = remainder.sub(distributions[i].amount);
-
+                
                 // Transfer the SNX
                 IERC20(synthetixProxy).transfer(distributions[i].destination, distributions[i].amount);
-
+               
                 // If the contract implements RewardsDistributionRecipient.sol, inform it how many SNX its received.
                 bytes memory payload = abi.encodeWithSignature("notifyRewardAmount(uint256)", distributions[i].amount);
 

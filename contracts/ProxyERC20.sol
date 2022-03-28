@@ -4,7 +4,7 @@ pragma solidity ^0.5.16;
 import "hardhat/console.sol";
 import "./Proxy.sol";
 import "synthetix/contracts/interfaces/IERC20.sol";
-import "./RewardToken.sol";
+
 // https://docs.synthetix.io/contracts/source/contracts/proxyerc20
 contract ProxyERC20 is Proxy, IERC20 {
     constructor(address _owner) public Proxy(_owner) {}
@@ -43,6 +43,7 @@ contract ProxyERC20 is Proxy, IERC20 {
      */
     function balanceOf(address account) public view returns (uint256) {
         // Immutable static call from target contract
+        console.log(IERC20(address(target)).balanceOf(account));
         return IERC20(address(target)).balanceOf(account);
     }
 
@@ -68,8 +69,9 @@ contract ProxyERC20 is Proxy, IERC20 {
         target.setMessageSender(msg.sender);
         
         // Forward the ERC20 call to the target contract
+        // address(target).delegatecall(abi.encodeWithSignature("transfer(address,uint256)",to,value));
         IERC20(address(target)).transfer(to, value);
-
+        // address(target).call(abi.encodeWithSignature("transfer(address,uint256)",to,value));
         // Event emitting will occur via Synthetix.Proxy._emit()
         return true;
     }

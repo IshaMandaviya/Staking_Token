@@ -20,7 +20,7 @@ contract Proxyable is Owned {
 
     constructor(address payable _proxy) internal {
         // This contract is abstract, and thus cannot be instantiated directly
-        // require(owner != address(0), "Owner must be set");
+        require(owner != address(0), "Owner must be set");
 
         proxy = Proxy(_proxy);
         emit ProxyUpdated(_proxy);

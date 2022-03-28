@@ -8,8 +8,11 @@ import "synthetix/contracts/interfaces/IERC20.sol";
 // import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 // https://docs.synthetix.io/contracts/source/contracts/proxyerc20
-contract reward is  IERC20 , Proxyable {
-    constructor(address payable _proxy) public Proxyable(_proxy) {}
+contract reward is  IERC20 {    
+    address public target;
+    constructor(address _target) public  {
+        target=_target;
+    }
 
     // ------------- ERC20 Details ------------- //
 
@@ -45,7 +48,7 @@ contract reward is  IERC20 , Proxyable {
      */
     function balanceOf(address account) public view returns (uint256) {
         // Immutable static call from target contract
-        return IERC20(address(this)).balanceOf(account);
+        return IERC20(target).balanceOf(account);
     }
 
     /**
@@ -69,7 +72,7 @@ contract reward is  IERC20 , Proxyable {
         // target.setMessageSender(msg.sender);
         
         // Forward the ERC20 call to the target contract
-        IERC20(address(this)).transfer(to, value);
+        IERC20(target).transfer(to, value);
 
         // Event emitting will occur via Synthetix.Proxy._emit()
         return true;
